@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Painel Exclusivo do Proprietário • VIP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090E;
+      --card: #111623;
+      --input: #0A0E17;
+      --border: rgba(255, 255, 255, 0.1);
+      --gold: #EAC67A;
+      --accent: #E11D48;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 20px 16px 90px;
+    }
+
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 22px;
+    }
+
+    header h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: var(--gold);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .btn-outline { background: var(--card); border: 1px solid var(--border); color: var(--text); }
+    .btn-gold { background: linear-gradient(135deg, #EAC67A, #C99A3E); color: #090B10; }
+    .btn-danger { background: rgba(225, 29, 72, 0.16); border: 1px solid rgba(225, 29, 72, 0.4); color: #FDA4AF; padding: 7px 11px; font-size: 12px; }
+
+    .status-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pill {
+      font-size: 12px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    .pill.ok { border-color: rgba(16, 185, 129, 0.45); color: #6EE7B7; }
+    .pill.warn { border-color: rgba(234, 198, 122, 0.45); color: var(--gold); }
+
+    section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media (max-width: 600px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      background: var(--input);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      margin-bottom: 12px;
+    }
+
+    textarea { min-height: 74px; resize: vertical; }
+
+    .upload-dropzone {
+      border: 2px dashed rgba(234, 198, 122, 0.45);
+      background: rgba(234, 198, 122, 0.05);
+      border-radius: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background 0.25s ease;
+    }
+
+    .upload-dropzone:hover {
+      background: rgba(234, 198, 122, 0.1);
+    }
+
+    .media-admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .media-admin-item {
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .preview-box {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      overflow: hidden;
+      background: #05070B;
+    }
+
+    .preview-box img, .preview-box video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.2s ease;
+    }
+
+    .preview-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(0, 0, 0, 0.72);
+      color: var(--gold);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    .item-controls {
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .item-controls input {
+      margin-bottom: 4px;
+      padding: 7px 9px;
+      font-size: 12px;
+    }
+
+    .row-card {
+      background: var(--input);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 8px;
+      align-items: center;
+    }
+
+    @media (max-width: 600px) {
+      .row-card { grid-template-columns: 1fr; }
+    }
+
+    .row-card input { margin-bottom: 0; }
+
+    .floating-save {
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 828px;
+      background: rgba(17, 22, 35, 0.94);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(234, 198, 122, 0.4);
+      padding: 12px 18px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
+      z-index: 50;
+    }
+
+    .toast {
+      font-size: 13px;
+      color: var(--gold);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>👑 Painel Privado do Proprietário</h1>
+      <p style="font-size:12.5px; color:var(--muted);">Somente você tem acesso a esta página. Os clientes veem apenas o site público.</p>
+    </div>
+    <div class="header-actions">
+      <a href="/" target="_blank" class="btn btn-outline">👁️ Ver Site Público</a>
+    </div>
+  </header>
+
+  <div class="status-bar" id="statusBar"></div>
+
+  <!-- 1. PERFIL E FOTOS DE CAPA/AVATAR -->
+  <section>
+    <h2>1. Identidade & Perfil</h2>
+    <div class="grid-2">
+      <div>
+        <label>Foto de Capa (Galeria ou Link)</label>
+        <div style="display:flex; gap:6px; margin-bottom:10px;">
+          <input type="text" id="s_cover" placeholder="https://..." style="margin-bottom:0;">
+          <label class="btn btn-outline" style="margin:0; white-space:nowrap; cursor:pointer;">
+            📁 Galeria <input type="file" accept="image/*" hidden onchange="uploadProfileImage(event, 's_cover')">
+          </label>
+        </div>
+      </div>
+      <div>
+        <label>Foto de Perfil / Avatar (Galeria ou Link)</label>
+        <div style="display:flex; gap:6px; margin-bottom:10px;">
+          <input type="text" id="s_avatar" placeholder="https://..." style="margin-bottom:0;">
+          <label class="btn btn-outline" style="margin:0; white-space:nowrap; cursor:pointer;">
+            📁 Galeria <input type="file" accept="image/*" hidden onchange="uploadProfileImage(event, 's_avatar')">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Nome de Exibição</label>
+        <input type="text" id="s_name">
+      </div>
+      <div>
+        <label>@Username</label>
+        <input type="text" id="s_handle">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Número de Assinantes Exibido (vazio = oculto)</label>
+        <input type="text" id="s_subs" placeholder="Ex: 348">
+      </div>
+      <div>
+        <label>Título da Aba do Navegador</label>
+        <input type="text" id="s_title">
+      </div>
+    </div>
+
+    <label>Biografia / Descrição Elegante</label>
+    <textarea id="s_bio"></textarea>
+  </section>
+
+  <!-- 2. APARÊNCIA, CORES E CONTROLE DE BLUR -->
+  <section>
+    <h2>2. Estilo Visual & Nível de Blur das Fotos/Vídeos</h2>
+    <div class="grid-2">
+      <div>
+        <label>Intensidade do Blur nos Posts Bloqueados: <b id="blurLabel" style="color:var(--gold);">18px</b></label>
+        <input type="range" id="s_blur" min="0" max="40" value="18" style="width:100%; accent-color:#EAC67A; margin:10px 0 16px;" oninput="updateBlurPreview(this.value)">
+        <small style="color:var(--muted); display:block; margin-top:-10px; margin-bottom:12px;">
+          Os vídeos continuam em movimento contínuo por baixo desse blur enquanto o cliente rola a página.
+        </small>
+      </div>
+      <div>
+        <label>Paleta de Cores Luxo</label>
+        <select id="s_accent">
+          <option value="ruby">Rubi Imperial (Rosa/Vermelho Luxo)</option>
+          <option value="gold">Ouro Real (Dourado Exclusivo)</option>
+          <option value="emerald">Esmeralda Obsidiana (Verde VIP)</option>
+          <option value="violet">Ametista Velvet (Roxo Noturno)</option>
+          <option value="pearl">Pérola Champagne (Rosé Suave)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Colunas da Galeria</label>
+        <select id="s_columns">
+          <option value="2">2 Colunas (Destaque Grande)</option>
+          <option value="3">3 Colunas (Mosaico Compacto)</option>
+        </select>
+      </div>
+      <div>
+        <label>Texto do Botão Principal de Pagamento</label>
+        <input type="text" id="s_cta">
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <label>Título da Seção de Conteúdo</label>
+        <input type="text" id="s_contentTitle">
+      </div>
+      <div>
+        <label>Título da Seção de Planos</label>
+        <input type="text" id="s_plansTitle">
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. GALERIA DE FOTOS E VÍDEOS (UPLOAD DIRETO DA GALERIA + PRÉVIA COM BLUR) -->
+  <section>
+    <h2>3. Galeria de Fotos & Vídeos (Com Blur e Vídeo em Movimento)</h2>
+
+    <label class="upload-dropzone">
+      <div style="font-size:26px; margin-bottom:6px;">📸 🎥</div>
+      <div style="font-weight:700; color:var(--gold); font-size:14.5px;">Toque aqui para adicionar Fotos e Vídeos da sua Galeria</div>
+      <div style="font-size:12px; color:var(--muted); margin-top:4px;">Suporta JPG, PNG, WEBP e vídeos curtos até 3.2 MB (para vídeos grandes, cole o link .mp4 abaixo)</div>
+      <input type="file" accept="image/*,video/*" multiple hidden onchange="handleGalleryUpload(event)">
+    </label>
+
+    <div style="display:flex; gap:8px; margin-bottom:14px;">
+      <input type="text" id="externalMediaUrl" placeholder="Ou cole aqui o link direto de uma foto ou vídeo (.mp4)..." style="margin-bottom:0;">
+      <button type="button" class="btn btn-outline" onclick="addExternalMedia()">+ Adicionar Link</button>
+    </div>
+
+    <div class="media-admin-grid" id="mediaAdminGrid"></div>
+  </section>
+
+  <!-- 4. PLANOS E PREÇO AVULSO -->
+  <section>
+    <h2>4. Planos VIP & Desbloqueio Avulso</h2>
+    <div style="max-width:260px;">
+      <label>Preço para desbloquear 1 post avulso (R$)</label>
+      <input type="number" step="0.01" id="s_singlePrice">
+    </div>
+
+    <label style="margin-top:8px;">Planos de Assinatura</label>
+    <div id="plansContainer"></div>
+    <button type="button" class="btn btn-outline" onclick="addPlan()">+ Novo Plano</button>
+  </section>
+
+  <!-- 5. DEPOIMENTOS -->
+  <section>
+    <h2>5. Avaliações & Depoimentos</h2>
+    <label>Título da Seção de Avaliações</label>
+    <input type="text" id="s_reviewsTitle">
+    <div id="reviewsContainer"></div>
+    <button type="button" class="btn btn-outline" onclick="addReview()">+ Novo Depoimento</button>
+  </section>
+
+  <!-- 6. API DE PAGAMENTO & VENDAS -->
+  <section>
+    <h2>6. API de Pagamento PIX & Últimas Vendas</h2>
+    <p style="font-size:12.5px; color:var(--muted); margin-bottom:12px;">
+      Configure sua chave <code>CROWNBOT_CHAVE</code> nas variáveis de ambiente do Render para ativar o checkout automático.
+    </p>
+    <button type="button" class="btn btn-outline" onclick="loadSales()">🔄 Atualizar Lista de Vendas PIX</button>
+    <div id="salesList" style="margin-top:12px; font-size:13px; color:var(--muted);"></div>
+  </section>
+
+  <div class="floating-save">
+    <span class="toast" id="toastMsg">Pronto para editar</span>
+    <button type="button" class="btn btn-gold" onclick="saveAll()">💾 Salvar Alterações no Site</button>
+  </div>
+
+  <script>
+    let state = null;
+
+    function setToast(msg) {
+      document.getElementById('toastMsg').textContent = msg;
+    }
+
+    async function init() {
+      const res = await fetch('/api/admin/state');
+      if (res.status === 401) {
+        location.reload();
+        return;
+      }
+      const data = await res.json();
+      state = data.db;
+
+      document.getElementById('statusBar').innerHTML = `
+        <span class="pill ${data.gatewayConfigured ? 'ok' : 'warn'}">
+          ${data.gatewayConfigured ? '✅ API PIX Crownbot Conectada' : '⚠️ Falta CROWNBOT_CHAVE na Vercel'}
+        </span>
+        <span class="pill ${data.githubConfigured ? 'ok' : 'warn'}">
+          ${data.githubConfigured ? '✅ Salvamento GitHub Ativo' : 'ℹ️ Modo Local (configure GITHUB_TOKEN na Vercel)'}
+        </span>
+      `;
+
+      fillForm();
+    }
+
+    function fillForm() {
+      const s = state.settings;
+      document.getElementById('s_cover').value = s.cover || '';
+      document.getElementById('s_avatar').value = s.avatar || '';
+      document.getElementById('s_name').value = s.name || '';
+      document.getElementById('s_handle').value = s.handle || '';
+      document.getElementById('s_subs').value = s.subs || '';
+      document.getElementById('s_title').value = s.title || '';
+      document.getElementById('s_bio').value = s.bio || '';
+      document.getElementById('s_blur').value = Number(s.blur ?? 18);
+      document.getElementById('s_accent').value = s.accent || 'ruby';
+      document.getElementById('s_columns').value = String(s.columns || 2);
+      document.getElementById('s_cta').value = s.cta || '';
+      document.getElementById('s_contentTitle').value = s.contentTitle || '';
+      document.getElementById('s_plansTitle').value = s.plansTitle || '';
+      document.getElementById('s_singlePrice').value = Number(s.singlePrice || 12.90);
+      document.getElementById('s_reviewsTitle').value = s.reviewsTitle || '';
+
+      updateBlurPreview(s.blur ?? 18);
+      renderMedia();
+      renderPlans();
+      renderReviews();
+    }
+
+    function updateBlurPreview(val) {
+      state.settings.blur = Number(val);
+      document.getElementById('blurLabel').textContent = `${val}px`;
+      document.querySelectorAll('.preview-box img, .preview-box video').forEach(el => {
+        el.style.filter = `blur(${val}px)`;
+        el.style.transform = Number(val) > 0 ? 'scale(1.12)' : 'scale(1)';
+      });
+    }
+
+    async function fileToBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadFileToServer(file) {
+      const dataBase64 = await fileToBase64(file);
+      const res = await fetch('/api/admin/upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ filename: file.name, dataBase64 })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erro no upload');
+      return data.url;
+    }
+
+    async function uploadProfileImage(event, targetInputId) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      try {
+        setToast('Enviando imagem da galeria...');
+        const url = await uploadFileToServer(file);
+        document.getElementById(targetInputId).value = url;
+        setToast('Imagem enviada! Clique em Salvar Alterações.');
+      } catch (err) {
+        alert(err.message);
+        setToast('Erro no upload');
+      }
+    }
+
+    async function handleGalleryUpload(event) {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) return;
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        try {
+          setToast(`Enviando ${i + 1} de ${files.length}: ${file.name}...`);
+          const url = await uploadFileToServer(file);
+          const isVideo = file.type.startsWith('video/') || /\.(mp4|webm|mov|m4v)$/i.test(file.name);
+          state.media.unshift({
+            id: 'm_' + Date.now() + '_' + i,
+            kind: isVideo ? 'video' : 'image',
+            url,
+            title: '',
+            free: false
+          });
+          renderMedia();
+        } catch (err) {
+          alert(`Erro ao enviar ${file.name}: ${err.message}`);
+        }
+      }
+      setToast('Mídias adicionadas! Clique em Salvar Alterações.');
+      event.target.value = '';
+    }
+
+    function addExternalMedia() {
+      const input = document.getElementById('externalMediaUrl');
+      const url = input.value.trim();
+      if (!url) return;
+      const isVideo = /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(url);
+      state.media.unshift({
+        id: 'm_' + Date.now(),
+        kind: isVideo ? 'video' : 'image',
+        url,
+        title: '',
+        free: false
+      });
+      input.value = '';
+      renderMedia();
+      setToast('Link adicionado! Clique em Salvar Alterações.');
+    }
+
+    function renderMedia() {
+      const blur = Number(state.settings.blur ?? 18);
+      const grid = document.getElementById('mediaAdminGrid');
+      grid.innerHTML = state.media.map((item, idx) => `
+        <div class="media-admin-item">
+          <div class="preview-box">
+            <span class="preview-badge">${item.kind === 'video' ? '🎥 VÍDEO EM MOVIMENTO' : '📸 FOTO'} • BLUR ${blur}px</span>
+            ${item.kind === 'video'
+              ? `<video src="${item.url}" autoplay loop muted playsinline style="filter:blur(${blur}px); transform:${blur > 0 ? 'scale(1.12)' : 'scale(1)'};"></video>`
+              : `<img src="${item.url}" style="filter:blur(${blur}px); transform:${blur > 0 ? 'scale(1.12)' : 'scale(1)'};">`
+            }
+          </div>
+          <div class="item-controls">
+            <input type="text" placeholder="Legenda opcional..." value="${item.title || ''}" oninput="state.media[${idx}].title = this.value">
+            <button type="button" class="btn btn-danger" onclick="state.media.splice(${idx}, 1); renderMedia();">🗑️ Remover</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderPlans() {
+      document.getElementById('plansContainer').innerHTML = state.plans.map((pl, idx) => `
+        <div class="row-card">
+          <div>
+            <label>Dias</label>
+            <input type="number" value="${pl.days}" oninput="state.plans[${idx}].days = Number(this.value)">
+          </div>
+          <div>
+            <label>Preço (R$)</label>
+            <input type="number" step="0.01" value="${pl.price}" oninput="state.plans[${idx}].price = Number(this.value)">
+          </div>
+          <div>
+            <label>Selo (Opcional)</label>
+            <input type="text" placeholder="Ex: MAIS ESCOLHIDO" value="${pl.badge || ''}" oninput="state.plans[${idx}].badge = this.value">
+          </div>
+          <button type="button" class="btn btn-danger" onclick="state.plans.splice(${idx}, 1); renderPlans();">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function addPlan() {
+      state.plans.push({ id: 'p_' + Date.now(), days: 30, price: 29.90, badge: '' });
+      renderPlans();
+    }
+
+    function renderReviews() {
+      document.getElementById('reviewsContainer').innerHTML = state.reviews.map((r, idx) => `
+        <div class="row-card" style="grid-template-columns: 1fr 90px 2fr auto;">
+          <input type="text" placeholder="Nome" value="${r.user}" oninput="state.reviews[${idx}].user = this.value">
+          <input type="number" min="1" max="5" value="${r.stars || 5}" oninput="state.reviews[${idx}].stars = Number(this.value)">
+          <input type="text" placeholder="Depoimento..." value="${r.text}" oninput="state.reviews[${idx}].text = this.value">
+          <button type="button" class="btn btn-danger" onclick="state.reviews.splice(${idx}, 1); renderReviews();">✕</button>
+        </div>
+      `).join('');
+    }
+
+    function addReview() {
+      state.reviews.push({ id: 'r_' + Date.now(), user: 'Cliente VIP', stars: 5, text: 'Conteúdo maravilhoso!' });
+      renderReviews();
+    }
+
+    async function saveAll() {
+      state.settings = {
+        ...state.settings,
+        cover: document.getElementById('s_cover').value.trim(),
+        avatar: document.getElementById('s_avatar').value.trim(),
+        name: document.getElementById('s_name').value.trim(),
+        handle: document.getElementById('s_handle').value.trim(),
+        subs: document.getElementById('s_subs').value.trim(),
+        title: document.getElementById('s_title').value.trim(),
+        bio: document.getElementById('s_bio').value.trim(),
+        blur: Number(document.getElementById('s_blur').value),
+        accent: document.getElementById('s_accent').value,
+        columns: Number(document.getElementById('s_columns').value),
+        cta: document.getElementById('s_cta').value.trim(),
+        contentTitle: document.getElementById('s_contentTitle').value.trim(),
+        plansTitle: document.getElementById('s_plansTitle').value.trim(),
+        singlePrice: Number(document.getElementById('s_singlePrice').value),
+        reviewsTitle: document.getElementById('s_reviewsTitle').value.trim()
+      };
+
+      setToast('Salvando alterações...');
+      const res = await fetch('/api/admin/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(state)
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || 'Erro ao salvar.');
+        setToast('Falha ao salvar');
+        return;
+      }
+      setToast('✅ Tudo salvo e publicado no site!');
+    }
+
+    async function loadSales() {
+      const box = document.getElementById('salesList');
+      box.textContent = 'Buscando vendas na API PIX...';
+      const res = await fetch('/api/admin/sales');
+      const data = await res.json();
+      if (data.warning) {
+        box.textContent = data.warning;
+        return;
+      }
+      if (!data.sales || !data.sales.length) {
+        box.textContent = 'Nenhuma venda registrada ainda.';
+        return;
+      }
+      box.innerHTML = data.sales.map(s => `
+        <div style="padding:8px 0; border-bottom:1px solid var(--border);">
+          <b>${s.referencia || s.id}</b> — R$ ${(Number(s.valor_centavos || 0)/100).toFixed(2)} — <span>${s.status}</span>
+        </div>
+      `).join('');
+    }
+
+    init();
+  </script>
+</body>
+</html>

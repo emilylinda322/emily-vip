@@ -1,0 +1,15 @@
+{
+  "name": "perfil-vip-vercel",
+  "version": "2.1.0",
+  "description": "Plataforma VIP Elegante otimizada para Vercel Serverless + GitHub + Crownbot PIX",
+  "main": "api/index.js",
+  "scripts": {
+    "start": "node api/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}

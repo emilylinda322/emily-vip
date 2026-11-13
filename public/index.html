@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil VIP Exclusivo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090E;
+      --surface: rgba(18, 22, 33, 0.78);
+      --surface-solid: #121621;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-gold: rgba(234, 198, 122, 0.28);
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --gold: #EAC67A;
+      --gold-bright: #FFE29E;
+      --accent: #E11D48;
+      --accent-2: #FB7185;
+      --accent-glow: rgba(225, 29, 72, 0.35);
+      --blur-amount: 18px;
+    }
+
+    body.theme-gold {
+      --accent: #D4AF37;
+      --accent-2: #FDE08D;
+      --accent-glow: rgba(212, 175, 55, 0.35);
+    }
+    body.theme-emerald {
+      --accent: #10B981;
+      --accent-2: #6EE7B7;
+      --accent-glow: rgba(16, 185, 129, 0.35);
+    }
+    body.theme-violet {
+      --accent: #8B5CF6;
+      --accent-2: #C4B5FD;
+      --accent-glow: rgba(139, 92, 246, 0.35);
+    }
+    body.theme-pearl {
+      --accent: #F43F5E;
+      --accent-2: #FDA4AF;
+      --accent-glow: rgba(244, 63, 94, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 50% -10%, var(--accent-glow), transparent 55%),
+        radial-gradient(circle at 85% 30%, rgba(234, 198, 122, 0.06), transparent 45%),
+        var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 72px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 720px;
+      padding: 18px 16px 0;
+    }
+
+    /* Banner & Avatar */
+    .hero-wrap {
+      position: relative;
+    }
+
+    .banner {
+      width: 100%;
+      height: 200px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: linear-gradient(145deg, #151A28, #0D1019);
+      border: 1px solid var(--border);
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+
+    .banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(7, 9, 14, 0.72) 0%, transparent 55%);
+      pointer-events: none;
+    }
+
+    .banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .banner-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-end;
+      padding: 18px;
+    }
+
+    .avatar-ring {
+      width: 98px;
+      height: 98px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--gold), var(--accent), var(--gold-bright));
+      margin: -52px 0 0 22px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.65);
+    }
+
+    .avatar-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: #111520;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      border: 3px solid var(--bg);
+    }
+
+    .avatar-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Profile Info */
+    .profile-info {
+      padding: 14px 18px 0;
+    }
+
+    .name-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .profile-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 30px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      line-height: 1.1;
+    }
+
+    .profile-handle {
+      color: var(--muted);
+      font-size: 13.5px;
+      margin-top: 3px;
+    }
+
+    .profile-bio {
+      color: #CBD5E1;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .stat-pill {
+      background: var(--surface);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .stat-pill b {
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    /* ========================================================================
+       ANIMAÇÃO ELEGANTE DAS COROAS AO PASSAR O DEDO OU MOUSE
+       ======================================================================== */
+    .crown-interactive {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1), filter 0.42s ease;
+      transform-origin: center bottom;
+      user-select: none;
+      touch-action: manipulation;
+    }
+
+    .crown-interactive svg {
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.45s ease;
+      filter: drop-shadow(0 2px 8px rgba(234, 198, 122, 0.32));
+    }
+
+    @keyframes crownRoyalFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-3px) rotate(2deg); }
+    }
+
+    @keyframes crownTouchSweep {
+      0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 8px rgba(234, 198, 122, 0.4)); }
+      35% { transform: scale(1.28) translateY(-6px) rotate(-10deg); filter: drop-shadow(0 0 22px rgba(255, 226, 158, 0.95)); }
+      70% { transform: scale(1.22) translateY(-4px) rotate(8deg); filter: drop-shadow(0 0 26px rgba(255, 226, 158, 1)); }
+      100% { transform: scale(1.12) translateY(-2px) rotate(0deg); filter: drop-shadow(0 0 16px rgba(234, 198, 122, 0.8)); }
+    }
+
+    .crown-float {
+      animation: crownRoyalFloat 3.6s ease-in-out infinite;
+    }
+
+    .crown-interactive:hover svg,
+    .crown-interactive.touched svg,
+    .media-card:hover .crown-interactive svg,
+    .media-card.touch-active .crown-interactive svg {
+      animation: crownTouchSweep 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    /* Section Headings */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 32px 0 16px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    /* Media Gallery Grid */
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .media-grid.cols-3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 520px) {
+      .media-grid.cols-3 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .media-card {
+      position: relative;
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      overflow: hidden;
+      background: #10141F;
+      border: 1px solid var(--border);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.45);
+      transition: transform 0.35s ease, border-color 0.35s ease;
+    }
+
+    .media-card:hover,
+    .media-card.touch-active {
+      border-color: var(--border-gold);
+      transform: translateY(-2px);
+    }
+
+    /* Mídia (Foto ou Vídeo em movimento contínuo com o blur escolhido no painel) */
+    .media-visual {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.5s ease, transform 0.5s ease;
+    }
+
+    .media-card.locked .media-visual {
+      filter: blur(var(--blur-amount));
+      transform: scale(1.14);
+      pointer-events: none;
+    }
+
+    .lock-veil {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(7, 9, 14, 0.18), rgba(7, 9, 14, 0.62));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .vip-tag {
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    }
+
+    .unlock-single-btn {
+      background: rgba(15, 19, 30, 0.82);
+      backdrop-filter: blur(10px);
+      color: var(--text);
+      border: 1px solid var(--border-gold);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s ease;
+    }
+
+    .unlock-single-btn:hover {
+      background: var(--gold);
+      color: #090B10;
+      transform: scale(1.04);
+    }
+
+    .media-badge-type {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(7, 9, 14, 0.65);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--gold-bright);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+      z-index: 2;
+    }
+
+    .media-caption {
+      position: absolute;
+      inset: auto 0 0 0;
+      padding: 22px 12px 10px;
+      background: linear-gradient(to top, rgba(7, 9, 14, 0.9), transparent);
+      font-size: 12px;
+      color: #E2E8F0;
+      z-index: 2;
+    }
+
+    .empty-gallery {
+      border: 1px dashed var(--border);
+      border-radius: 20px;
+      padding: 36px 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13.5px;
+      background: var(--surface);
+    }
+
+    /* Subscription Plans */
+    .plans-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .plan-card {
+      width: 100%;
+      background: var(--surface);
+      backdrop-filter: blur(14px);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      color: var(--text);
+      text-align: left;
+      transition: all 0.28s ease;
+    }
+
+    .plan-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      transform: translateY(-1px);
+    }
+
+    .plan-card.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.04), var(--accent-glow));
+      box-shadow: 0 10px 30px var(--accent-glow);
+    }
+
+    .plan-days {
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .plan-price {
+      font-size: 24px;
+      font-weight: 800;
+      margin-top: 2px;
+      letter-spacing: -0.02em;
+    }
+
+    .plan-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+    }
+
+    .plan-badge {
+      background: linear-gradient(135deg, var(--gold), var(--gold-bright));
+      color: #090B10;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 999px;
+      letter-spacing: 0.06em;
+    }
+
+    .radio-dot {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      display: grid;
+      place-items: center;
+      transition: all 0.25s ease;
+    }
+
+    .plan-card.active .radio-dot {
+      border-color: var(--accent);
+      background: var(--accent);
+    }
+
+    .cta-button {
+      margin-top: 16px;
+      width: 100%;
+      height: 58px;
+      border: none;
+      border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 14px 35px var(--accent-glow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
+    }
+
+    .cta-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 42px var(--accent-glow);
+    }
+
+    .cta-button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .trust-note {
+      margin-top: 12px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    /* PIX Checkout Box */
+    .pix-box {
+      margin-top: 22px;
+      background: var(--surface-solid);
+      border: 1px solid var(--border-gold);
+      border-radius: 22px;
+      padding: 22px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+      animation: fadeUp 0.35s ease;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pix-qr {
+      width: 200px;
+      height: 200px;
+      border-radius: 14px;
+      background: #fff;
+      padding: 8px;
+      margin: 14px auto;
+      display: block;
+    }
+
+    .pix-code {
+      width: 100%;
+      background: #080B12;
+      border: 1px solid var(--border);
+      color: #E2E8F0;
+      border-radius: 12px;
+      padding: 11px;
+      font-size: 12px;
+      resize: none;
+      height: 68px;
+      margin-top: 8px;
+    }
+
+    .copy-pix-btn {
+      margin-top: 10px;
+      width: 100%;
+      height: 46px;
+      border-radius: 12px;
+      border: 1px solid var(--border-gold);
+      background: rgba(234, 198, 122, 0.14);
+      color: var(--gold-bright);
+      font-weight: 700;
+      font-size: 13.5px;
+      cursor: pointer;
+    }
+
+    .status-banner {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 13px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border);
+    }
+
+    .status-banner.error {
+      background: rgba(225, 29, 72, 0.14);
+      border-color: rgba(225, 29, 72, 0.45);
+      color: #FDA4AF;
+    }
+
+    .status-banner.success {
+      background: rgba(16, 185, 129, 0.14);
+      border-color: rgba(16, 185, 129, 0.45);
+      color: #6EE7B7;
+    }
+
+    /* Reviews */
+    .reviews-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px 18px;
+    }
+
+    .review-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .review-user {
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .review-stars {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .review-text {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="app">
+    <div style="text-align:center; padding:80px 0; color:#94A3B8; font-size:14px;">
+      Carregando experiência VIP...
+    </div>
+  </div>
+
+  <script>
+    const CROWN_SVG = (size = 22) => `
+      <svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="none">
+        <defs>
+          <linearGradient id="royalGold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#FFE29E"/>
+            <stop offset="50%" stop-color="#EAC67A"/>
+            <stop offset="100%" stop-color="#B8892D"/>
+          </linearGradient>
+        </defs>
+        <path d="M2.5 7.5L6.8 12.2L12 5L17.2 12.2L21.5 7.5L19.4 18.5H4.6L2.5 7.5Z" fill="url(#royalGold)" stroke="#FFF2CC" stroke-width="1.1" stroke-linejoin="round"/>
+        <circle cx="12" cy="3.5" r="1.3" fill="#FFE29E"/>
+        <circle cx="2.5" cy="6.2" r="1.1" fill="#FFE29E"/>
+        <circle cx="21.5" cy="6.2" r="1.1" fill="#FFE29E"/>
+      </svg>
+    `;
+
+    let siteData = null;
+    let selectedPlanId = null;
+    let activePayment = null;
+    let pollInterval = null;
+    let busy = false;
+    let feedback = { type: '', text: '' };
+
+    const money = (v) => Number(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+    async function fetchSite() {
+      const token = localStorage.getItem('vip_token') || '';
+      const res = await fetch('/api/site', { headers: token ? { 'x-vip-token': token } : {} });
+      siteData = await res.json();
+      if (!selectedPlanId && siteData.plans.length) {
+        const featured = siteData.plans.find(p => p.badge === 'MAIS ESCOLHIDO') || siteData.plans[0];
+        selectedPlanId = featured.id;
+      }
+      applyTheme();
+      render();
+    }
+
+    function applyTheme() {
+      const s = siteData.settings;
+      document.title = s.title || 'Perfil VIP Exclusivo';
+      document.body.className = `theme-${s.accent || 'ruby'}`;
+      document.documentElement.style.setProperty('--blur-amount', `${Number(s.blur ?? 18)}px`);
+    }
+
+    function bindCrownTouchInteractions() {
+      // Faz qualquer coroa ou card reagir instantaneamente ao passar o dedo (touch) ou mouse
+      document.querySelectorAll('.crown-interactive, .media-card').forEach((el) => {
+        el.addEventListener('touchstart', () => {
+          el.classList.add('touch-active');
+          const crown = el.classList.contains('crown-interactive') ? el : el.querySelector('.crown-interactive');
+          if (crown) {
+            crown.classList.remove('touched');
+            void crown.offsetWidth;
+            crown.classList.add('touched');
+          }
+        }, { passive: true });
+
+        el.addEventListener('touchend', () => {
+          setTimeout(() => el.classList.remove('touch-active'), 700);
+        }, { passive: true });
+      });
+    }
+
+    async function startCheckout(kind, id) {
+      if (busy) return;
+      busy = true;
+      feedback = { type: '', text: 'Gerando seu PIX seguro...' };
+      render();
+
+      try {
+        const res = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ kind, id })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Erro ao gerar cobrança PIX.');
+
+        activePayment = data;
+        localStorage.setItem('vip_pending_pix', JSON.stringify(data));
+        feedback = { type: '', text: 'Aguardando confirmação do pagamento PIX...' };
+        startPolling(data.orderId, data.orderToken);
+      } catch (err) {
+        feedback = { type: 'error', text: err.message };
+      } finally {
+        busy = false;
+        render();
+      }
+    }
+
+    function startPolling(orderId, orderToken = '') {
+      if (pollInterval) clearInterval(pollInterval);
+      pollInterval = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/order/${encodeURIComponent(orderId)}?ot=${encodeURIComponent(orderToken || '')}`);
+          const data = await res.json();
+          if (data.status === 'paid' && data.token) {
+            clearInterval(pollInterval);
+            localStorage.setItem('vip_token', data.token);
+            localStorage.removeItem('vip_pending_pix');
+            activePayment = null;
+            feedback = { type: 'success', text: 'Pagamento confirmado! Conteúdo VIP desbloqueado.' };
+            await fetchSite();
+          } else if (data.status === 'expired') {
+            clearInterval(pollInterval);
+            localStorage.removeItem('vip_pending_pix');
+            activePayment = null;
+            feedback = { type: 'error', text: 'O QR Code PIX expirou. Clique novamente para gerar outro.' };
+            render();
+          }
+        } catch (_) {}
+      }, 3000);
+    }
+
+    function render() {
+      if (!siteData) return;
+      const s = siteData.settings;
+      const photosCount = siteData.media.filter(m => m.kind === 'image').length;
+      const videosCount = siteData.media.filter(m => m.kind === 'video').length;
+      const currentPlan = siteData.plans.find(p => p.id === selectedPlanId) || siteData.plans[0];
+
+      document.getElementById('app').innerHTML = `
+        <div class="hero-wrap">
+          <div class="banner">
+            ${s.cover
+              ? `<img src="${s.cover}" alt="Capa de ${s.name}">`
+              : `<div class="banner-placeholder"><span class="crown-interactive crown-float">${CROWN_SVG(30)}</span></div>`
+            }
+          </div>
+          <div class="avatar-ring">
+            <div class="avatar-inner">
+              ${s.avatar
+                ? `<img src="${s.avatar}" alt="${s.name}">`
+                : `<span class="crown-interactive">${CROWN_SVG(34)}</span>`
+              }
+            </div>
+          </div>
+        </div>
+
+        <section class="profile-info">
+          <div class="name-row">
+            <h1 class="profile-name">${s.name}</h1>
+            <span class="crown-interactive crown-float" title="Perfil Oficial Verificado">${CROWN_SVG(22)}</span>
+          </div>
+          <div class="profile-handle">${s.handle}</div>
+          ${s.bio ? `<p class="profile-bio">${s.bio}</p>` : ''}
+
+          <div class="stats-row">
+            <span class="stat-pill"><b>${photosCount}</b> fotos</span>
+            <span class="stat-pill"><b>${videosCount}</b> vídeos</span>
+            ${s.subs ? `<span class="stat-pill"><b>${s.subs}</b> assinantes</span>` : ''}
+          </div>
+        </section>
+
+        <section>
+          <div class="section-head">
+            <h2 class="section-title">${s.contentTitle || 'Conteúdo Exclusivo'}</h2>
+            <span class="crown-interactive">${CROWN_SVG(20)}</span>
+          </div>
+
+          ${siteData.media.length ? `
+            <div class="media-grid ${Number(s.columns) === 3 ? 'cols-3' : ''}">
+              ${siteData.media.map(item => `
+                <article class="media-card ${item.unlocked ? '' : 'locked'}">
+                  ${item.kind === 'video' ? `<span class="media-badge-type">VÍDEO</span>` : ''}
+                  ${item.kind === 'video'
+                    ? `<video class="media-visual" src="${item.url}" ${item.unlocked ? 'controls' : 'autoplay loop muted playsinline'} preload="metadata"></video>`
+                    : `<img class="media-visual" src="${item.url}" alt="${item.title || 'Conteúdo VIP'}" loading="lazy">`
+                  }
+                  ${!item.unlocked ? `
+                    <div class="lock-veil">
+                      <span class="crown-interactive crown-float">${CROWN_SVG(34)}</span>
+                      <span class="vip-tag">VIP ACCESS</span>
+                      <button class="unlock-single-btn" onclick="startCheckout('media', '${item.id}')" ${busy ? 'disabled' : ''}>
+                        🔒 ${money(s.singlePrice || 12.90)}
+                      </button>
+                    </div>
+                  ` : ''}
+                  ${item.title ? `<div class="media-caption">${item.title}</div>` : ''}
+                </article>
+              `).join('')}
+            </div>
+          ` : `
+            <div class="empty-gallery">
+              Nenhum conteúdo publicado ainda.
+            </div>
+          `}
+        </section>
+
+        ${!siteData.unlocked && siteData.plans.length ? `
+          <section>
+            <div class="section-head">
+              <h2 class="section-title">${s.plansTitle || 'Escolha seu plano VIP'}</h2>
+            </div>
+            <div class="plans-list">
+              ${siteData.plans.map(pl => `
+                <button type="button" class="plan-card ${pl.id === currentPlan?.id ? 'active' : ''}" onclick="selectedPlanId='${pl.id}'; render();">
+                  <div>
+                    <div class="plan-days">${pl.days} dias de acesso completo</div>
+                    <div class="plan-price">${money(pl.price)}</div>
+                  </div>
+                  <div class="plan-right">
+                    ${pl.badge ? `<span class="plan-badge">${pl.badge}</span>` : ''}
+                    <span class="radio-dot">${pl.id === currentPlan?.id ? '✓' : ''}</span>
+                  </div>
+                </button>
+              `).join('')}
+            </div>
+
+            <button type="button" class="cta-button" onclick="startCheckout('plan', '${currentPlan.id}')" ${busy ? 'disabled' : ''}>
+              <span class="crown-interactive">${CROWN_SVG(22)}</span>
+              <span>${busy ? 'Gerando PIX...' : `${s.cta || 'Desbloquear Acesso VIP'} — ${money(currentPlan.price)}`}</span>
+            </button>
+            <div class="trust-note">🛡️ Liberação imediata e discreta após confirmação do PIX</div>
+          </section>
+        ` : ''}
+
+        ${feedback.text ? `<div class="status-banner ${feedback.type}">${feedback.text}</div>` : ''}
+
+        ${activePayment ? `
+          <section class="pix-box">
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+              <span class="crown-interactive crown-float">${CROWN_SVG(24)}</span>
+              <h3 style="font-family:'Cormorant Garamond',serif; font-size:24px;">Pagamento PIX</h3>
+            </div>
+            <p style="font-size:12.5px; color:var(--muted); margin-top:4px;">Escaneie o QR Code ou copie o código abaixo no app do seu banco</p>
+            ${activePayment.qr ? `<img class="pix-qr" src="${activePayment.qr}" alt="QR Code PIX">` : ''}
+            <textarea class="pix-code" readonly id="pixCodeText">${activePayment.copia}</textarea>
+            <button type="button" class="copy-pix-btn" onclick="copyPixCode()">📋 Copiar código PIX Copia e Cola</button>
+          </section>
+        ` : ''}
+
+        ${siteData.reviews && siteData.reviews.length ? `
+          <section>
+            <div class="section-head">
+              <h2 class="section-title">${s.reviewsTitle || 'Quem já entrou'}</h2>
+            </div>
+            <div class="reviews-list">
+              ${siteData.reviews.map(r => `
+                <article class="review-card">
+                  <div class="review-top">
+                    <span class="review-user">${r.user}</span>
+                    <span class="review-stars">${'★'.repeat(Number(r.stars || 5))}</span>
+                  </div>
+                  <p class="review-text">${r.text}</p>
+                </article>
+              `).join('')}
+            </div>
+          </section>
+        ` : ''}
+      `;
+
+      bindCrownTouchInteractions();
+    }
+
+    async function copyPixCode() {
+      const el = document.getElementById('pixCodeText');
+      if (!el) return;
+      await navigator.clipboard.writeText(el.value);
+      feedback = { type: 'success', text: 'Código PIX copiado! Cole no aplicativo do seu banco.' };
+      render();
+    }
+
+    // Restaura pagamento pendente se o cliente recarregar a página
+    try {
+      const savedPix = localStorage.getItem('vip_pending_pix');
+      if (savedPix) {
+        activePayment = JSON.parse(savedPix);
+        if (activePayment && activePayment.orderId) startPolling(activePayment.orderId, activePayment.orderToken);
+      }
+    } catch (_) {}
+
+    fetchSite();
+  </script>
+</body>
+</html>
