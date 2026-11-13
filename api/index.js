@@ -63,6 +63,20 @@ const verifyToken = (token) => {
   return scope;
 };
 
+function defaultStatsFromId(idStr) {
+  let hash = 0;
+  const s = String(idStr || 'vip');
+  for (let i = 0; i < s.length; i++) {
+    hash = ((hash << 5) - hash) + s.charCodeAt(i);
+    hash |= 0;
+  }
+  const abs = Math.abs(hash);
+  return {
+    likes: 118 + (abs % 245),
+    comments: 14 + (abs % 31)
+  };
+}
+
 const app = express();
 app.use(express.json({ limit: '4.5mb' }));
 
@@ -72,7 +86,6 @@ const wrap = (fn) => (req, res, next) =>
     res.status(500).json({ error: err.message || 'Erro interno no servidor' });
   });
 
-// Proteção exclusiva do painel Admin (somente você acessa com ADMIN_PASSWORD)
 function checkAdminAuth(req) {
   if (!ADMIN_PASS) return true;
   const headerToken = req.headers['x-admin-password'];
@@ -98,12 +111,10 @@ function requireAdminApi(req, res, next) {
   return res.status(401).json({ error: 'Senha de administrador incorreta ou não informada.' });
 }
 
-// Rota exclusiva do painel privado (admin.html fica fora de public/ para ninguém acessar direto)
 app.get('/admin', requireAdminPage, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'views', 'admin.html'));
 });
 
-// Serve os arquivos enviados da galeria (/uploads/...)
 const MIME_TYPES = {
   '.jpg': 'image/jpeg',
   '.jpeg': 'image/jpeg',
@@ -148,7 +159,7 @@ app.get('/uploads/:filename', wrap(async (req, res) => {
   return res.end(buffer);
 }));
 
-// Dados públicos para os visitantes
+// Dados públicos para os visitantes (inclui curtidas e comentários em cada publicação)
 app.get('/api/site', wrap(async (req, res) => {
   const db = await getDb();
   const token = req.headers['x-vip-token'] || req.query.token;
@@ -157,11 +168,14 @@ app.get('/api/site', wrap(async (req, res) => {
 
   const mediaList = (db.media || []).map((item) => {
     const itemUnlocked = fullUnlocked || scope === `media:${item.id}` || item.free === true;
+    const fallback = defaultStatsFromId(item.id);
     return {
       id: item.id,
       kind: item.kind || 'image',
       title: item.title || '',
       url: item.url,
+      likes: item.likes !== undefined && item.likes !== '' ? Number(item.likes) : fallback.likes,
+      comments: item.comments !== undefined && item.comments !== '' ? Number(item.comments) : fallback.comments,
       unlocked: itemUnlocked
     };
   });
@@ -175,7 +189,6 @@ app.get('/api/site', wrap(async (req, res) => {
   });
 }));
 
-// Cria cobrança PIX stateless (100% compatível com Vercel Serverless)
 app.post('/api/checkout', wrap(async (req, res) => {
   const db = await getDb();
   const { kind, id } = req.body || {};
@@ -203,7 +216,6 @@ app.post('/api/checkout', wrap(async (req, res) => {
   const referencia = `vip_${Date.now()}_${uid().slice(0, 6)}`;
   const pix = await pay.createPix({ amount, referencia, description });
 
-  // Assina o escopo e duração no token do pedido para não depender de memória RAM na Vercel
   const orderToken = createToken(`${scope}|${days}`, Date.now() + 2 * 60 * 60 * 1000);
 
   res.json({
@@ -214,7 +226,6 @@ app.post('/api/checkout', wrap(async (req, res) => {
   });
 }));
 
-// Verifica se o PIX foi pago
 app.get('/api/order/:ref', wrap(async (req, res) => {
   const ref = req.params.ref;
   const pix = await pay.getPix(ref);
@@ -247,6 +258,14 @@ app.get('/api/order/:ref', wrap(async (req, res) => {
 
 app.get('/api/admin/state', requireAdminApi, wrap(async (req, res) => {
   const db = await getDb(true);
+  db.media = (db.media || []).map((item) => {
+    const fallback = defaultStatsFromId(item.id);
+    return {
+      ...item,
+      likes: item.likes !== undefined ? Number(item.likes) : fallback.likes,
+      comments: item.comments !== undefined ? Number(item.comments) : fallback.comments
+    };
+  });
   res.json({
     db,
     gatewayConfigured: Boolean(process.env.CROWNBOT_CHAVE),
@@ -283,7 +302,6 @@ app.post('/api/admin/upload', requireAdminApi, wrap(async (req, res) => {
   const cleanBase64 = dataBase64.replace(/^data:[^;]+;base64,/, '');
   const buffer = Buffer.from(cleanBase64, 'base64');
 
-  // Limite seguro da Vercel Serverless (4.5 MB total de payload)
   if (buffer.length > 3.2 * 1024 * 1024) {
     return res.status(400).json({
       error: 'Na Vercel, o envio direto da galeria suporta até 3.2 MB por arquivo. Para vídeos maiores, hospede o .mp4 (ex: Catbox.moe) e cole o link direto!'
@@ -305,7 +323,6 @@ app.get('/api/admin/sales', requireAdminApi, wrap(async (req, res) => {
   res.json({ sales });
 }));
 
-// Execução local caso rode fora da Vercel
 if (require.main === module) {
   app.use(express.static(path.join(__dirname, '..', 'public'), { index: 'index.html' }));
   const PORT = process.env.PORT || 3000;
