@@ -9,7 +9,7 @@
     "avatar": "/uploads/1794595070614_d9fa5623623c2a2c.jpg",
     "accent": "ruby",
     "columns": 3,
-    "blur": 8,
+    "blur": 10,
     "singlePrice": 12.9,
     "contentTitle": "Conteúdo Exclusivo",
     "plansTitle": "Escolha seu plano VIP",
@@ -38,9 +38,9 @@
   ],
   "media": [
     {
-      "id": "m_1794596510622",
+      "id": "m_1794596561803_0",
       "kind": "video",
-      "url": "https://files.catbox.moe/7gw5mv.mp4",
+      "url": "/uploads/1794596561434_fce63bc09aaac2f2.mov",
       "title": "",
       "free": false
     },
