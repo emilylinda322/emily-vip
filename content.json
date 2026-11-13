@@ -36,7 +36,78 @@
       "badge": "MELHOR OFERTA"
     }
   ],
-  "media": [],
+  "media": [
+    {
+      "id": "m_1794594615213_9",
+      "kind": "image",
+      "url": "/uploads/1794594615035_39916311af277e26.png",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594613147_8",
+      "kind": "image",
+      "url": "/uploads/1794594612578_ab2ac73427228700.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594610287_7",
+      "kind": "image",
+      "url": "/uploads/1794594609618_8fbb7c776cb4b459.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594607276_6",
+      "kind": "image",
+      "url": "/uploads/1794594606317_e7b89ad801e6edb1.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594604080_5",
+      "kind": "image",
+      "url": "/uploads/1794594603501_d51a286e600100ba.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594601222_4",
+      "kind": "image",
+      "url": "/uploads/1794594600409_463d64f2e74a7de0.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594598171_3",
+      "kind": "image",
+      "url": "/uploads/1794594598232_3712a18e859266b8.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594596509_2",
+      "kind": "image",
+      "url": "/uploads/1794594596497_444709a9792d3617.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594594890_1",
+      "kind": "image",
+      "url": "/uploads/1794594594869_df6e35bd017d3d8b.jpg",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794594592976_0",
+      "kind": "image",
+      "url": "/uploads/1794594592747_0965bfb371bfa401.jpg",
+      "title": "",
+      "free": false
+    }
+  ],
   "reviews": [
     {
       "id": "r1",
