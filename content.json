@@ -36,7 +36,22 @@
       "badge": "MELHOR OFERTA"
     }
   ],
-  "media": [],
+  "media": [
+    {
+      "id": "m_1794596510622",
+      "kind": "video",
+      "url": "https://files.catbox.moe/7gw5mv.mp4",
+      "title": "",
+      "free": false
+    },
+    {
+      "id": "m_1794596448863",
+      "kind": "video",
+      "url": "https://files.catbox.moe/rw1eye.mp4",
+      "title": "",
+      "free": false
+    }
+  ],
   "reviews": [
     {
       "id": "r1",
