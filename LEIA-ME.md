@@ -19,3 +19,5 @@
    - `GITHUB_REPO` = `emilylinda322/meu-perfil-vip`
    - `GITHUB_BRANCH` = `data`
 4. Clique em **Deploy**.
+
+   
