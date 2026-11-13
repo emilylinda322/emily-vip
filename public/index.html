@@ -777,9 +777,32 @@
       }
     }
 
+    // Guarda VÁRIOS códigos de acesso (um por compra), sem perder os anteriores
+    function getTokens() {
+      let list = [];
+      try {
+        const saved = JSON.parse(localStorage.getItem('vip_tokens') || '[]');
+        if (Array.isArray(saved)) list = saved;
+      } catch (_) {}
+      const legacy = localStorage.getItem('vip_token');
+      if (legacy && !list.includes(legacy)) list.push(legacy);
+      const now = Date.now();
+      return list.filter((t) => {
+        const exp = Number(String(t).split('.')[1]);
+        return exp && exp > now;
+      });
+    }
+
+    function addToken(token) {
+      const list = getTokens().filter((t) => t !== token);
+      list.push(token);
+      localStorage.setItem('vip_tokens', JSON.stringify(list.slice(-50)));
+      localStorage.removeItem('vip_token');
+    }
+
     async function fetchSite() {
-      const token = localStorage.getItem('vip_token') || '';
-      const res = await fetch('/api/site', { headers: token ? { 'x-vip-token': token } : {} });
+      const tokens = getTokens();
+      const res = await fetch('/api/site', { headers: tokens.length ? { 'x-vip-token': tokens.join(',') } : {} });
       siteData = await res.json();
       if (!selectedPlanId && siteData.plans.length) {
         const featured = siteData.plans.find(p => p.badge === 'MAIS ESCOLHIDO') || siteData.plans[0];
@@ -838,6 +861,10 @@
       } finally {
         busy = false;
         render();
+        setTimeout(() => {
+          const target = document.getElementById('pixBox') || document.getElementById('statusBanner');
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 120);
       }
     }
 
@@ -849,7 +876,7 @@
           const data = await res.json();
           if (data.status === 'paid' && data.token) {
             clearInterval(pollInterval);
-            localStorage.setItem('vip_token', data.token);
+            addToken(data.token);
             localStorage.removeItem('vip_pending_pix');
             activePayment = null;
             feedback = { type: 'success', text: 'Pagamento confirmado! Conteúdo VIP desbloqueado.' };
@@ -984,10 +1011,10 @@
           </section>
         ` : ''}
 
-        ${feedback.text ? `<div class="status-banner ${feedback.type}">${feedback.text}</div>` : ''}
+        ${feedback.text ? `<div class="status-banner ${feedback.type}" id="statusBanner">${feedback.text}</div>` : ''}
 
         ${activePayment ? `
-          <section class="pix-box">
+          <section class="pix-box" id="pixBox">
             <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
               <span class="crown-interactive crown-float">${CROWN_SVG(24)}</span>
               <h3 style="font-family:'Cormorant Garamond',serif; font-size:24px;">Pagamento PIX</h3>
