@@ -162,12 +162,16 @@ app.get('/uploads/:filename', wrap(async (req, res) => {
 // Dados públicos para os visitantes (inclui curtidas e comentários em cada publicação)
 app.get('/api/site', wrap(async (req, res) => {
   const db = await getDb();
-  const token = req.headers['x-vip-token'] || req.query.token;
-  const scope = verifyToken(token);
-  const fullUnlocked = scope === 'all';
+  const rawTokens = String(req.headers['x-vip-token'] || req.query.token || '')
+    .split(',')
+    .map((t) => t.trim())
+    .filter(Boolean)
+    .slice(0, 60);
+  const scopes = new Set(rawTokens.map(verifyToken).filter(Boolean));
+  const fullUnlocked = scopes.has('all');
 
   const mediaList = (db.media || []).map((item) => {
-    const itemUnlocked = fullUnlocked || scope === `media:${item.id}` || item.free === true;
+    const itemUnlocked = fullUnlocked || scopes.has(`media:${item.id}`) || item.free === true;
     const fallback = defaultStatsFromId(item.id);
     return {
       id: item.id,
@@ -216,7 +220,8 @@ app.post('/api/checkout', wrap(async (req, res) => {
   const referencia = `vip_${Date.now()}_${uid().slice(0, 6)}`;
   const pix = await pay.createPix({ amount, referencia, description });
 
-  const orderToken = createToken(`${scope}|${days}`, Date.now() + 2 * 60 * 60 * 1000);
+  const refTag = Buffer.from(String(pix.ref)).toString('base64url');
+  const orderToken = createToken(`${scope}|${days}|${refTag}`, Date.now() + 2 * 60 * 60 * 1000);
 
   res.json({
     orderId: pix.ref,
@@ -233,13 +238,13 @@ app.get('/api/order/:ref', wrap(async (req, res) => {
 
   if (['paid', 'pago', 'approved', 'concluido', 'confirmed'].includes(rawStatus)) {
     const verifiedOrder = verifyToken(req.query.ot);
-    let scope = 'all';
-    let days = 30;
-    if (verifiedOrder && verifiedOrder.includes('|')) {
-      const [s, d] = verifiedOrder.split('|');
-      scope = s || 'all';
-      days = Number(d || 30);
+    const bits = verifiedOrder ? verifiedOrder.split('|') : [];
+    const expectedRef = bits[2] ? Buffer.from(bits[2], 'base64url').toString() : null;
+    if (bits.length !== 3 || expectedRef !== String(ref)) {
+      return res.json({ status: 'pending' });
     }
+    const scope = bits[0];
+    const days = Number(bits[1] || 30);
     const expiresAt = Date.now() + days * 24 * 60 * 60 * 1000;
     const token = createToken(scope, expiresAt);
     return res.json({ status: 'paid', token });
