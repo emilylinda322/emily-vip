@@ -1,0 +1,60 @@
+{
+  "settings": {
+    "title": "Perfil VIP Exclusivo",
+    "name": "Emily VIP",
+    "handle": "@emily_vip",
+    "bio": "Conteúdos exclusivos, bastidores sem censura e acesso imediato após confirmação do PIX.",
+    "subs": "348",
+    "cover": "/uploads/1794594369136_4a5ec108ceae17cd.jpg",
+    "avatar": "/uploads/1794594348814_2e3f238fef10b34a.jpg",
+    "accent": "ruby",
+    "columns": 2,
+    "blur": 18,
+    "singlePrice": 12.9,
+    "contentTitle": "Conteúdo Exclusivo",
+    "plansTitle": "Escolha seu plano VIP",
+    "cta": "Desbloquear Acesso VIP",
+    "reviewsTitle": "Quem já entrou"
+  },
+  "plans": [
+    {
+      "id": "p1",
+      "days": 15,
+      "price": 14.9,
+      "badge": ""
+    },
+    {
+      "id": "p2",
+      "days": 30,
+      "price": 24.99,
+      "badge": "MAIS ESCOLHIDO"
+    },
+    {
+      "id": "p3",
+      "days": 90,
+      "price": 34.5,
+      "badge": "MELHOR OFERTA"
+    }
+  ],
+  "media": [],
+  "reviews": [
+    {
+      "id": "r1",
+      "user": "Janderson Diogo",
+      "stars": 5,
+      "text": "Conteúdo impecável e liberação instantânea assim que o PIX caiu."
+    },
+    {
+      "id": "r2",
+      "user": "Rafael Sandro",
+      "stars": 5,
+      "text": "Qualidade absurda dos vídeos e site super discreto e rápido."
+    },
+    {
+      "id": "r3",
+      "user": "Bruno C.",
+      "stars": 5,
+      "text": "Vale cada centavo, tudo muito organizado e atualizado sempre."
+    }
+  ]
+}
