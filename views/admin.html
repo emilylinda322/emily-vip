@@ -153,7 +153,7 @@
 
     .media-admin-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
       gap: 14px;
       margin-top: 14px;
     }
@@ -202,9 +202,28 @@
     }
 
     .item-controls input {
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       padding: 7px 9px;
       font-size: 12px;
+    }
+
+    .stats-edit-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin: 2px 0 4px;
+    }
+
+    .stats-edit-field label {
+      font-size: 10.5px;
+      margin-bottom: 2px;
+      color: #CBD5E1;
+    }
+
+    .stats-edit-field input {
+      padding: 6px 8px;
+      font-size: 12px;
+      margin-bottom: 0;
     }
 
     .row-card {
@@ -265,7 +284,6 @@
 
   <div class="status-bar" id="statusBar"></div>
 
-  <!-- 1. PERFIL E FOTOS DE CAPA/AVATAR -->
   <section>
     <h2>1. Identidade & Perfil</h2>
     <div class="grid-2">
@@ -315,7 +333,6 @@
     <textarea id="s_bio"></textarea>
   </section>
 
-  <!-- 2. APARÊNCIA, CORES E CONTROLE DE BLUR -->
   <section>
     <h2>2. Estilo Visual & Nível de Blur das Fotos/Vídeos</h2>
     <div class="grid-2">
@@ -364,9 +381,8 @@
     </div>
   </section>
 
-  <!-- 3. GALERIA DE FOTOS E VÍDEOS (UPLOAD DIRETO DA GALERIA + PRÉVIA COM BLUR) -->
   <section>
-    <h2>3. Galeria de Fotos & Vídeos (Com Blur e Vídeo em Movimento)</h2>
+    <h2>3. Galeria de Fotos & Vídeos (Curtidas, Comentários, Blur e Movimento)</h2>
 
     <label class="upload-dropzone">
       <div style="font-size:26px; margin-bottom:6px;">📸 🎥</div>
@@ -383,7 +399,6 @@
     <div class="media-admin-grid" id="mediaAdminGrid"></div>
   </section>
 
-  <!-- 4. PLANOS E PREÇO AVULSO -->
   <section>
     <h2>4. Planos VIP & Desbloqueio Avulso</h2>
     <div style="max-width:260px;">
@@ -396,7 +411,6 @@
     <button type="button" class="btn btn-outline" onclick="addPlan()">+ Novo Plano</button>
   </section>
 
-  <!-- 5. DEPOIMENTOS -->
   <section>
     <h2>5. Avaliações & Depoimentos</h2>
     <label>Título da Seção de Avaliações</label>
@@ -405,11 +419,10 @@
     <button type="button" class="btn btn-outline" onclick="addReview()">+ Novo Depoimento</button>
   </section>
 
-  <!-- 6. API DE PAGAMENTO & VENDAS -->
   <section>
     <h2>6. API de Pagamento PIX & Últimas Vendas</h2>
     <p style="font-size:12.5px; color:var(--muted); margin-bottom:12px;">
-      Configure sua chave <code>CROWNBOT_CHAVE</code> nas variáveis de ambiente do Render para ativar o checkout automático.
+      Configure sua chave <code>CROWNBOT_CHAVE</code> nas variáveis de ambiente da Vercel para ativar o checkout automático.
     </p>
     <button type="button" class="btn btn-outline" onclick="loadSales()">🔄 Atualizar Lista de Vendas PIX</button>
     <div id="salesList" style="margin-top:12px; font-size:13px; color:var(--muted);"></div>
@@ -422,6 +435,13 @@
 
   <script>
     let state = null;
+
+    function randomEngagement() {
+      return {
+        likes: Math.floor(110 + Math.random() * 260),
+        comments: Math.floor(14 + Math.random() * 34)
+      };
+    }
 
     function setToast(msg) {
       document.getElementById('toastMsg').textContent = msg;
@@ -526,11 +546,14 @@
           setToast(`Enviando ${i + 1} de ${files.length}: ${file.name}...`);
           const url = await uploadFileToServer(file);
           const isVideo = file.type.startsWith('video/') || /\.(mp4|webm|mov|m4v)$/i.test(file.name);
+          const stats = randomEngagement();
           state.media.unshift({
             id: 'm_' + Date.now() + '_' + i,
             kind: isVideo ? 'video' : 'image',
             url,
             title: '',
+            likes: stats.likes,
+            comments: stats.comments,
             free: false
           });
           renderMedia();
@@ -547,11 +570,14 @@
       const url = input.value.trim();
       if (!url) return;
       const isVideo = /\.(mp4|webm|mov|m4v|ogg)(\?|#|$)/i.test(url);
+      const stats = randomEngagement();
       state.media.unshift({
         id: 'm_' + Date.now(),
         kind: isVideo ? 'video' : 'image',
         url,
         title: '',
+        likes: stats.likes,
+        comments: stats.comments,
         free: false
       });
       input.value = '';
@@ -565,7 +591,7 @@
       grid.innerHTML = state.media.map((item, idx) => `
         <div class="media-admin-item">
           <div class="preview-box">
-            <span class="preview-badge">${item.kind === 'video' ? '🎥 VÍDEO EM MOVIMENTO' : '📸 FOTO'} • BLUR ${blur}px</span>
+            <span class="preview-badge">${item.kind === 'video' ? '🎥 VÍDEO' : '📸 FOTO'} • BLUR ${blur}px</span>
             ${item.kind === 'video'
               ? `<video src="${item.url}" autoplay loop muted playsinline style="filter:blur(${blur}px); transform:${blur > 0 ? 'scale(1.12)' : 'scale(1)'};"></video>`
               : `<img src="${item.url}" style="filter:blur(${blur}px); transform:${blur > 0 ? 'scale(1.12)' : 'scale(1)'};">`
@@ -573,6 +599,16 @@
           </div>
           <div class="item-controls">
             <input type="text" placeholder="Legenda opcional..." value="${item.title || ''}" oninput="state.media[${idx}].title = this.value">
+            <div class="stats-edit-row">
+              <div class="stats-edit-field">
+                <label>❤️ Curtidas</label>
+                <input type="number" min="0" value="${item.likes ?? 148}" oninput="state.media[${idx}].likes = Number(this.value)">
+              </div>
+              <div class="stats-edit-field">
+                <label>💬 Comentários</label>
+                <input type="number" min="0" value="${item.comments ?? 22}" oninput="state.media[${idx}].comments = Number(this.value)">
+              </div>
+            </div>
             <button type="button" class="btn btn-danger" onclick="state.media.splice(${idx}, 1); renderMedia();">🗑️ Remover</button>
           </div>
         </div>
